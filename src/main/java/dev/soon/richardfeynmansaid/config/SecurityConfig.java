@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
 
-        return (web) -> web.ignoring().antMatchers("/", "/login/**", "/users/signup", "/css/**", "/logout");
+        return (web) -> web.ignoring().antMatchers("/", "/login/**", "/users/signup", "/css/**", "/logout", "/*.ico", "/error");
     }
 
     @Bean
