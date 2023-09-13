@@ -1,5 +1,6 @@
 package dev.soon.richardfeynmansaid.web;
 
+import dev.soon.richardfeynmansaid.security.TokenStatus;
 import dev.soon.richardfeynmansaid.security.service.JwtService;
 import dev.soon.richardfeynmansaid.user.domain.User;
 import dev.soon.richardfeynmansaid.user.repository.UserRepository;
@@ -24,7 +25,7 @@ public class HomeController {
         if(token == null) {
             return "home";
         }
-        if(!jwtService.isTokenValid(token)) {
+        if(jwtService.validateToken(token) != TokenStatus.VALID) {
             return "home";
         }
         String email = jwtService.getEmailFromToken(token);
