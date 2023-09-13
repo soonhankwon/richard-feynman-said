@@ -1,5 +1,7 @@
 package dev.soon.richardfeynmansaid.security.service;
 
+import dev.soon.richardfeynmansaid.security.TokenStatus;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -42,14 +44,14 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token) {
+    public TokenStatus validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(this.key).build()
                     .parseClaimsJws(token);
-            return true;
-        } catch (SecurityException e) {
+            return TokenStatus.VALID;
+        } catch (ExpiredJwtException e) {
             e.printStackTrace();
-            return false;
+            return TokenStatus.EXPIRED;
         }
     }
 
