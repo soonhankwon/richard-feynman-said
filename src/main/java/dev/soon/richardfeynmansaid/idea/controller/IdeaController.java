@@ -1,7 +1,9 @@
 package dev.soon.richardfeynmansaid.idea.controller;
 
+import dev.soon.richardfeynmansaid.idea.controller.dto.FeedbackResDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaEditReqDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSaveReqDto;
+import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSubmitReqDto;
 import dev.soon.richardfeynmansaid.idea.domain.Idea;
 import dev.soon.richardfeynmansaid.idea.service.IdeaService;
 import dev.soon.richardfeynmansaid.security.SecurityUser;
@@ -60,6 +62,34 @@ public class IdeaController {
     public String editIdea(@PathVariable Long ideaId, @ModelAttribute("idea") IdeaEditReqDto dto) {
         ideaService.editIdea(ideaId, dto);
         return "redirect:/ideas/{ideaId}";
+    }
+
+    @GetMapping("/{ideaId}/submit")
+    public String submitForm(@PathVariable Long ideaId, Model model) {
+        Idea idea = ideaService.findIdeaById(ideaId);
+        model.addAttribute("idea", idea);
+        return "ideas/submitForm";
+    }
+
+    @PostMapping("/{ideaId}/submit")
+    public String submitIdea(@PathVariable Long ideaId, @ModelAttribute("idea") IdeaSubmitReqDto dto) {
+        ideaService.submitIdea(dto);
+        return "redirect:/ideas/{ideaId}";
+    }
+
+    @GetMapping("/{ideaId}/feedback")
+    public String feedback(@PathVariable Long ideaId, Model model) {
+        FeedbackResDto feedback = new FeedbackResDto("A", "ai feedback blah blah");
+        Idea idea = ideaService.findIdeaById(ideaId);
+        model.addAttribute("feedback", feedback);
+        model.addAttribute("idea", idea);
+        return "/feedbacks/feedback";
+    }
+
+    @PostMapping("/{ideaId}/feedback")
+    public String saveFeedback(@PathVariable Long ideaId, @ModelAttribute("feedback") String dto) {
+        log.info("logic={}", "feedback save logic");
+        return "/feedbacks/feedback";
     }
 
     @PostMapping("/{ideaId}/delete")
