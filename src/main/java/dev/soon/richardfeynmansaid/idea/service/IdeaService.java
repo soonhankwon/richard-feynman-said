@@ -2,6 +2,7 @@ package dev.soon.richardfeynmansaid.idea.service;
 
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaEditReqDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSaveReqDto;
+import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSubmitReqDto;
 import dev.soon.richardfeynmansaid.idea.domain.Idea;
 import dev.soon.richardfeynmansaid.idea.repository.IdeaRepository;
 import dev.soon.richardfeynmansaid.security.SecurityUser;
@@ -38,6 +39,12 @@ public class IdeaService {
         Idea idea = new Idea(dto, user);
         ideaRepository.save(idea);
         log.info("save idea={}", idea);
+    }
+
+    public void submitIdea(IdeaSubmitReqDto dto) {
+        log.info("AI submit={}", dto);
+        // use external api
+        // return result
     }
 
     @Transactional
