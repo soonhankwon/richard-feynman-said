@@ -24,6 +24,9 @@ public class Idea {
 
     private String description;
 
+    @Embedded
+    private Feedback feedback;
+
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +35,7 @@ public class Idea {
     public Idea(IdeaSaveReqDto dto, User user) {
         this.topic = dto.topic();
         this.description = dto.description();
+        this.feedback = new Feedback();
         this.createdAt = LocalDateTime.now();
         this.user = user;
     }
@@ -39,5 +43,9 @@ public class Idea {
     public void edit(IdeaEditReqDto dto) {
         this.topic = dto.topic();
         this.description = dto.description();
+    }
+
+    public boolean isFeedbackCompleted() {
+        return this.feedback.getGrade() != Grade.BEFORE_EVALUATION;
     }
 }
