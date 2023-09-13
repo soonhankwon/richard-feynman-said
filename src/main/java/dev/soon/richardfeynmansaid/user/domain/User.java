@@ -3,13 +3,15 @@ package dev.soon.richardfeynmansaid.user.domain;
 import dev.soon.richardfeynmansaid.auth.controller.dto.LoginForm;
 import dev.soon.richardfeynmansaid.user.controller.dto.SignupForm;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "`user`")
-@NoArgsConstructor
 public class User {
 
     @Id
