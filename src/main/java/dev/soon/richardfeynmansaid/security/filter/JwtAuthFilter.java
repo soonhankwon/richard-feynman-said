@@ -1,5 +1,6 @@
 package dev.soon.richardfeynmansaid.security.filter;
 
+import dev.soon.richardfeynmansaid.security.TokenStatus;
 import dev.soon.richardfeynmansaid.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         log.info("request URL = {}", requestURI);
         Optional<Cookie> accessToken = Arrays.stream(request.getCookies()).filter(i -> i.getName().equals("AccessToken")).findFirst();
-
         if(accessToken.isEmpty()) {
             response.sendRedirect("/login?redirectURL=" + requestURI);
             return;
@@ -40,7 +40,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = accessToken.get().getValue();
         log.info("Cookie = {}", token);
 
-        if(StringUtils.hasText(token) && jwtService.isTokenValid(token)) {
+        TokenStatus tokenStatus = jwtService.validateToken(token);
+        if(tokenStatus == TokenStatus.EXPIRED) {
+            response.sendRedirect("/login?redirectURL=" + requestURI);
+            return;
+        }
+        if(StringUtils.hasText(token) && tokenStatus == TokenStatus.VALID) {
             setAuthentication(jwtService.getEmailFromToken(token));
         }
         filterChain.doFilter(request, response);
