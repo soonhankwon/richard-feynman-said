@@ -9,6 +9,7 @@ import dev.soon.richardfeynmansaid.security.SecurityUser;
 import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,12 @@ public class IdeaController {
 
     private final IdeaService ideaService;
     private final ChatgptService chatgptService;
+
+    @Value("${gpt.protocol.topic}")
+    public String topicProtocol;
+
+    @Value("${gpt.protocol.description}")
+    public String descriptionProtocol;
 
     @GetMapping
     public String ideas(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
@@ -75,8 +82,8 @@ public class IdeaController {
     @PostMapping("/{ideaId}/submit")
     public String submitIdea(@PathVariable Long ideaId,
                              @ModelAttribute("idea") IdeaSubmitReqDto dto) {
-        String res = chatgptService.sendMessage(dto.description());
-        ideaService.saveFeedback(ideaId, res);
+        String result = chatgptService.sendMessage(topicProtocol + " " + dto.description() + " " + descriptionProtocol);
+        ideaService.saveFeedback(ideaId, result);
         return "redirect:/ideas/{ideaId}/feedback";
     }
 
