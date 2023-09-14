@@ -19,8 +19,7 @@ public class UserService {
 
     @Transactional
     public void signup(SignupForm form) {
-        SignupForm encodedForm = new SignupForm(form.email(), bCryptPasswordEncoder.encode(form.password()));
-        User user = new User(encodedForm);
+        User user = new User(form, bCryptPasswordEncoder);
         userRepository.save(user);
     }
 }
