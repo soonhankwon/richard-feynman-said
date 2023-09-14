@@ -18,4 +18,13 @@ public class Feedback {
         this.grade = Grade.BEFORE_EVALUATION;
         this.feed = null;
     }
+
+    public void saveFeedback(String result) {
+        if(result.contains("A")) {
+            this.grade = Grade.A;
+        } else {
+            this.grade = Grade.B;
+        }
+        this.feed = result;
+    }
 }
