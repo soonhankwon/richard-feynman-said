@@ -60,4 +60,10 @@ public class IdeaService {
         ideaRepository.delete(idea);
         log.info("delete idea={}", idea);
     }
+
+    @Transactional
+    public void saveFeedback(Long ideaId, String res) {
+        Idea idea = ideaRepository.findById(ideaId).orElseThrow();
+        idea.putFeedback(res);
+    }
 }
