@@ -1,12 +1,12 @@
 package dev.soon.richardfeynmansaid.idea.controller;
 
-import dev.soon.richardfeynmansaid.idea.controller.dto.FeedbackResDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaEditReqDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSaveReqDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSubmitReqDto;
 import dev.soon.richardfeynmansaid.idea.domain.Idea;
 import dev.soon.richardfeynmansaid.idea.service.IdeaService;
 import dev.soon.richardfeynmansaid.security.SecurityUser;
+import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +23,7 @@ import java.util.List;
 public class IdeaController {
 
     private final IdeaService ideaService;
+    private final ChatgptService chatgptService;
 
     @GetMapping
     public String ideas(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
@@ -72,23 +73,17 @@ public class IdeaController {
     }
 
     @PostMapping("/{ideaId}/submit")
-    public String submitIdea(@PathVariable Long ideaId, @ModelAttribute("idea") IdeaSubmitReqDto dto) {
-        ideaService.submitIdea(dto);
-        return "redirect:/ideas/{ideaId}";
+    public String submitIdea(@PathVariable Long ideaId,
+                             @ModelAttribute("idea") IdeaSubmitReqDto dto) {
+        String res = chatgptService.sendMessage(dto.description());
+        ideaService.saveFeedback(ideaId, res);
+        return "redirect:/ideas/{ideaId}/feedback";
     }
 
     @GetMapping("/{ideaId}/feedback")
     public String feedback(@PathVariable Long ideaId, Model model) {
-        FeedbackResDto feedback = new FeedbackResDto("A", "ai feedback blah blah");
         Idea idea = ideaService.findIdeaById(ideaId);
-        model.addAttribute("feedback", feedback);
         model.addAttribute("idea", idea);
-        return "/feedbacks/feedback";
-    }
-
-    @PostMapping("/{ideaId}/feedback")
-    public String saveFeedback(@PathVariable Long ideaId, @ModelAttribute("feedback") String dto) {
-        log.info("logic={}", "feedback save logic");
         return "/feedbacks/feedback";
     }
 
