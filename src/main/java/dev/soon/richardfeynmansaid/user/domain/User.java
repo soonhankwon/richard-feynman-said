@@ -28,11 +28,11 @@ public class User {
 
     private String password;
 
-    public User(SignupForm form) {
+    public User(SignupForm form, PasswordEncoder encoder) {
         this.email = form.email();
         this.nickname = form.email().split("@")[0];
         this.snsType = "email";
-        this.password = form.password();
+        this.password = encoder.encode(form.password());
     }
 
     public User(String email, String nickname, String imageUrl, String oauth2Provider) {
