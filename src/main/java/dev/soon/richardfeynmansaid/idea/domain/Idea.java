@@ -48,4 +48,8 @@ public class Idea {
     public boolean isFeedbackCompleted() {
         return this.feedback.getGrade() != Grade.BEFORE_EVALUATION;
     }
+
+    public void putFeedback(String result) {
+        this.feedback.saveFeedback(result);
+    }
 }
