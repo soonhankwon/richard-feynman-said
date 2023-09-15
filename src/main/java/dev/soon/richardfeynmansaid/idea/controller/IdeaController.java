@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,7 +69,12 @@ public class IdeaController {
     }
 
     @PostMapping("/{ideaId}/edit")
-    public String editIdea(@PathVariable Long ideaId, @ModelAttribute("idea") IdeaEditReqDto dto) {
+    public String editIdea(@PathVariable Long ideaId, @Validated @ModelAttribute("idea") IdeaEditReqDto dto,
+                           BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "ideas/editForm";
+        }
         ideaService.editIdea(ideaId, dto);
         return "redirect:/ideas/{ideaId}";
     }
