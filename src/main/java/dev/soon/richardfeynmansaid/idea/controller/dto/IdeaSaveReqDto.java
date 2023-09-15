@@ -1,4 +1,9 @@
 package dev.soon.richardfeynmansaid.idea.controller.dto;
 
-public record IdeaSaveReqDto(String topic, String description) {
+import javax.validation.constraints.NotBlank;
+
+public record IdeaSaveReqDto(
+        @NotBlank
+        String topic,
+        String description) {
 }
