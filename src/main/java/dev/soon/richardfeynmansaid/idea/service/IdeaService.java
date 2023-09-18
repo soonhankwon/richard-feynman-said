@@ -2,7 +2,6 @@ package dev.soon.richardfeynmansaid.idea.service;
 
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaEditReqDto;
 import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSaveReqDto;
-import dev.soon.richardfeynmansaid.idea.controller.dto.IdeaSubmitReqDto;
 import dev.soon.richardfeynmansaid.idea.domain.Idea;
 import dev.soon.richardfeynmansaid.idea.repository.IdeaRepository;
 import dev.soon.richardfeynmansaid.security.SecurityUser;
@@ -41,12 +40,6 @@ public class IdeaService {
         log.info("save idea={}", idea);
     }
 
-    public void submitIdea(IdeaSubmitReqDto dto) {
-        log.info("AI submit={}", dto);
-        // use external api
-        // return result
-    }
-
     @Transactional
     public void editIdea(Long ideaId, IdeaEditReqDto dto) {
         Idea idea = ideaRepository.findById(ideaId).orElseThrow();
@@ -64,6 +57,11 @@ public class IdeaService {
     @Transactional
     public void saveFeedback(Long ideaId, String res) {
         Idea idea = ideaRepository.findById(ideaId).orElseThrow();
-        idea.putFeedback(res);
+        idea.updateFeedback(res);
+    }
+
+    public List<Idea> findAllIdeas() {
+        List<Idea> ideas = ideaRepository.findAll();
+        return ideas;
     }
 }
