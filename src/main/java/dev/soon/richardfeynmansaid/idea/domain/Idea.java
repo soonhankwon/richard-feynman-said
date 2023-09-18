@@ -49,7 +49,7 @@ public class Idea {
         return this.feedback.getGrade() != Grade.BEFORE_EVALUATION;
     }
 
-    public void putFeedback(String result) {
+    public void updateFeedback(String result) {
         this.feedback.saveFeedback(result);
     }
 }
