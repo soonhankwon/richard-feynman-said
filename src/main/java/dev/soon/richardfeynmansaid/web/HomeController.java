@@ -1,5 +1,7 @@
 package dev.soon.richardfeynmansaid.web;
 
+import dev.soon.richardfeynmansaid.idea.domain.Idea;
+import dev.soon.richardfeynmansaid.idea.service.IdeaService;
 import dev.soon.richardfeynmansaid.security.TokenStatus;
 import dev.soon.richardfeynmansaid.security.service.JwtService;
 import dev.soon.richardfeynmansaid.user.domain.User;
@@ -11,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -18,6 +22,7 @@ public class HomeController {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final IdeaService ideaService;
 
     @GetMapping("/")
     public String home(@CookieValue(name = "AccessToken", required = false) String token, Model model) {
@@ -30,7 +35,10 @@ public class HomeController {
         }
         String email = jwtService.getEmailFromToken(token);
         User user = userRepository.findUserByEmail(email).get();
+
+        List<Idea> ideas = ideaService.findAllIdeas();
         model.addAttribute("user", user);
-        return "loginHome";
+        model.addAttribute("ideas", ideas);
+        return "loginHomeV2";
     }
 }
